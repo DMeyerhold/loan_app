@@ -1,4 +1,5 @@
-export default class Slider {
+
+class Slider {
     constructor(page, btns) {
         this.page = document.querySelector(page);
         this.slides = this.page.children;
@@ -67,3 +68,5 @@ export default class Slider {
         this.showSlides(this.slideIndex);
     }
 }
+
+// export default Slider; 
