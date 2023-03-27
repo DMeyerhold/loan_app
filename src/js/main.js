@@ -1,6 +1,7 @@
 import Slider from "./modules/slider/slider";
 import MainSlider from "./modules/slider/mainSlider";
 import ShowUpSlider from "./modules/slider/showUpSlider";
+import VideoPlayer from "./modules/videoPlayer";
 
 window.addEventListener("DOMContentLoaded", () => {
     // const pageSlider = new Slider('.page', '.next');
@@ -37,4 +38,11 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     modulesSlider.render();
+
+    const showUpVideo = new VideoPlayer({
+        triggers: '.showup .play',
+        block: '.overlay'
+    });
+
+    showUpVideo.init();
 });
