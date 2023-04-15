@@ -2,7 +2,6 @@ import Slider from "./modules/slider/slider";
 import MainSlider from "./modules/slider/mainSlider";
 import ShowUpSlider from "./modules/slider/showUpSlider";
 import VideoPlayer from "./modules/videoPlayer";
-import unfoldList from "./modules/unfoldList";
 import UnfoldList from "./modules/unfoldList";
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -54,4 +53,10 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     showUpVideo.init();
+    
+    const differenceList = new UnfoldList({
+        listItem: '.difference__wrapper .officer__card-item'
+    }); 
+
+    differenceList.render();
 });
