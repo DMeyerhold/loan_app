@@ -2,6 +2,8 @@ import Slider from "./modules/slider/slider";
 import MainSlider from "./modules/slider/mainSlider";
 import ShowUpSlider from "./modules/slider/showUpSlider";
 import VideoPlayer from "./modules/videoPlayer";
+import unfoldList from "./modules/unfoldList";
+import UnfoldList from "./modules/unfoldList";
 
 window.addEventListener("DOMContentLoaded", () => {
     // const pageSlider = new Slider('.page', '.next');
@@ -9,9 +11,9 @@ window.addEventListener("DOMContentLoaded", () => {
     // pageSlider.render();
 
     const scrollSlider = new MainSlider({
-        page: '.page',
+        parrent: '.page',
         btns: '.page .next',
-        scrollDir: 'column',
+        scrollDir: 'Y',
         home: '.page .sidecontrol > a'
     });
 
@@ -19,8 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
     scrollSlider.animateOnHover();
 
     const showUpSlider = new ShowUpSlider({
-        page: '.showup__content-slider',
-        btns: '.showup__content-title button',
+        parrent: '.showup__content-slider',
         prev: '.showup__prev',
         next: '.showup__next',
         activeClass: 'card-active'
@@ -29,15 +30,23 @@ window.addEventListener("DOMContentLoaded", () => {
     showUpSlider.render();
 
     const modulesSlider = new ShowUpSlider({
-        page: '.modules__content-slider',
-        btns: '.modules__info-btns button',
-        prev: '.slick-prev',
-        next: '.slick-prev',
+        parrent: '.modules__content-slider',
+        prev: '.modules .slick-prev',
+        next: '.modules .slick-next',
         activeClass: 'card-active',
-        auto: 3000
+        // auto: 5000
     });
 
     modulesSlider.render();
+
+    const feedSlider = new ShowUpSlider({
+        parrent: '.feed__slider',
+        prev: '.feed__slider .slick-prev',
+        next: '.feed__slider .slick-next',
+        activeClass: 'feed__item-active'
+    });
+
+    feedSlider.render();
 
     const showUpVideo = new VideoPlayer({
         triggers: '.showup .play',
