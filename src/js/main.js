@@ -3,6 +3,7 @@ import MainSlider from "./modules/slider/mainSlider";
 import ShowUpSlider from "./modules/slider/showUpSlider";
 import VideoPlayer from "./modules/videoPlayer";
 import UnfoldList from "./modules/unfoldList";
+import Forms from "./modules/forms";
 
 window.addEventListener("DOMContentLoaded", () => {
     // const pageSlider = new Slider('.page', '.next');
@@ -11,13 +12,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const scrollSlider = new MainSlider({
         parrent: '.page',
-        btns: '.page .next',
-        scrollDir: 'Y',
+        next: '.page .next',
         home: '.page .sidecontrol > a'
     });
 
     scrollSlider.render();
-    scrollSlider.animateOnHover();
+
+    const moduleAppSlider = new MainSlider({
+        parrent: '.moduleapp',
+        next: '.moduleapp .next',
+        prev: '.moduleapp .prev',
+        home:'.moduleapp .sidecontrol > a'
+    });
+
+    moduleAppSlider.render();
 
     const showUpSlider = new ShowUpSlider({
         parrent: '.showup__content-slider',
@@ -47,16 +55,21 @@ window.addEventListener("DOMContentLoaded", () => {
 
     feedSlider.render();
 
-    const showUpVideo = new VideoPlayer({
+    new VideoPlayer({
         triggers: '.showup .play',
         block: '.overlay'
-    });
+    }).init();
 
-    showUpVideo.init();
+    new VideoPlayer({
+        triggers: '.module__video-item .play',
+        block: '.overlay',
+    }).init();
     
-    const differenceList = new UnfoldList({
-        listItem: '.difference__wrapper .officer__card-item'
-    }); 
+    new VideoPlayer({
+        triggers: '.schedule__wrapper .play',
+        block: '.overlay'
+    }).init();
 
-    differenceList.render();
+    new UnfoldList({listItem: '.difference__wrapper .officer__card-item'}).render();
+    new Forms('.form').init();
 });
