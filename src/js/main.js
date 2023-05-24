@@ -4,6 +4,7 @@ import ShowUpSlider from "./modules/slider/showUpSlider";
 import VideoPlayer from "./modules/videoPlayer";
 import UnfoldList from "./modules/unfoldList";
 import Forms from "./modules/forms";
+import Accordion from "./modules/accordion";
 
 window.addEventListener("DOMContentLoaded", () => {
     // const pageSlider = new Slider('.page', '.next');
@@ -72,4 +73,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     new UnfoldList({listItem: '.difference__wrapper .officer__card-item'}).render();
     new Forms('.form').init();
+
+    new Accordion('.module__info-show .plus').init();
 });
