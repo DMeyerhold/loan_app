@@ -1,94 +1,108 @@
 import Slider from './slider';
 
 export default class ShowUpSlider extends Slider{
-    constructor ({parrent = null, prev = null, next = null, activeClass = null, scrollDir,  auto = null} = {}) {
-        super({parrent, scrollDir});
+    constructor ({parrent = null, next = null, prev = null, activeClass = null, auto = null} = {}) {
+        super({parrent, next, prev});
         this.auto = auto;
-        this.prev = document.querySelector(prev);
-        this.next = document.querySelector(next);
         this.btns = [this.prev, this.next];
         this.activeClass = activeClass;
-        this.clonedSlides = 3;
     }
 
-    render() {
-        this.defineDir();
-        this.wrap();
-        this.wrapper.style.width = 'fit-content';
+    bindTriggers() {
+        let wrapper = this.wrapper,
+        slides = this.slides;
 
-        this.slides.forEach((slide, i) => {
-            slide.dataset.sliderItem = i;
+        slides.forEach(slide => slide.classList.add('animated'));
 
-            if (i < this.clonedSlides) {
-                this.wrapper.append(slide.cloneNode(true));
-            }
+        this.prev.forEach(item => {
+            item.addEventListener('click', () => {
+                this.currentSlide = this.checkActiveSlide(--this.currentSlide);
+                
+                if (wrapper.children[slides.length - 1].nodeName === "BUTTON") {
+                    wrapper.insertBefore(wrapper.children[slides.length - 1], wrapper.children[0]);
+                    this.currentSlide -= 2;
+                } else {
+                    wrapper.insertBefore(wrapper.children[slides.length - 1], wrapper.children[0]);
+                }
 
-            if (i > this.slides.length - 1 - this.clonedSlides) {
-                this.wrapper.insertBefore(this.slides[i].cloneNode(true), this.slides[0]);
-            }
+                this.decorate();
+                animateMovement('slideInLeft');
+            });
         });
-        this.currentSlide = 0;
 
-        this.homeSlide();
-        this.addNav(this.btns);
-        this.decorate();
-        this.scrollByTime();
-        this.bindTimer(this.parrent);
+        this.next.forEach(item => {
+            item.addEventListener('click', () => {
+                if (wrapper.children[1].nodeName === "BUTTON") {
+                    wrapper.append(wrapper.children[0], wrapper.children[1], wrapper.children[2]);
+                    this.currentSlide += 2;
+                } else {
+                    wrapper.append(wrapper.children[0]);
+                }
 
-        this.btns.forEach(btn => {
-            this.bindTimer(btn.parentElement);
+                this.currentSlide = this.checkActiveSlide(++this.currentSlide);
+
+                this.decorate();
+                animateMovement('slideInRight');
+            });
         });
-    }
 
-    nextSlide() {
-        this.currentSlide++;
-        this.wrapper.style.transform = `translateX(-${this.offset * (this.currentSlide + this.clonedSlides) - 10}px)`;
-
-        if (this.currentSlide === this.slides.length) {
-            this.currentSlide = 0;
-            this.decorate();
+        function animateMovement(animation) {
+            slides.forEach((slide, i) => {
+                if (slide.nodeName !== "BUTTON") {
+                    slide.classList.add(animation);
+                }
+            });
 
             setTimeout(() => {
-                this.wrapper.style.transform = `translateX(-${this.offset * this.clonedSlides - 10}px)`;
-                this.wrapper.style.transitionDuration = '0s';
-            }, 900);
-        } else {
-            this.wrapper.style.transitionDuration = '1s';
-            this.decorate();
+                slides.forEach(slide => {
+                    slide.classList.remove(animation);
+                });
+            }, 1000);
         }
     }
 
-    prevSlide() {
-        this.currentSlide--;
-        this.wrapper.style.transform = `translateX(-${this.offset * (this.currentSlide + this.clonedSlides) - 10}px)`;
-
-        if (this.currentSlide < 0) {
-            this.currentSlide = this.slides.length - 1;
+    render() {
+        try {
+            this.wrap();
+            this.pushToSlide(0);
             this.decorate();
 
-            setTimeout(() => {
-                this.wrapper.style.transform = `translateX(-${this.offset * (this.slides.length - 1 + this.clonedSlides) - 10}px)`;
-                this.wrapper.style.transitionDuration = '0s';
-            }, 900);
-        } else {
-            this.wrapper.style.transitionDuration = '1s';
-            this.decorate();
-        }   
+            this.bindTriggers();
+
+            this.scrollByTime();
+            this.bindTimer(this.parrent);
+
+            this.btns.forEach(btn => {
+                this.bindTimer(btn.parentElement);
+            });
+        } catch(e) {}
     }
 
-    homeSlide () {
-        this.wrapper.style.transform = `translateX(-${this.offset * this.clonedSlides - 10}px)`;
-        this.decorate();
+    wrap() {
+        this.parrent.innerHTML = `<div class="wrapper"></div>`;
+
+        this.wrapper = this.parrent.querySelector('.wrapper');
+        this.wrapper.style.cssText = `
+            display: flex;
+            width: max-content;
+        `;
+
+        this.parrent.style.overflow = 'hidden';
+        this.wrapper.append(...this.slides);
+    }
+
+    pushToSlide(n) {
+        this.currentSlide = this.checkActiveSlide(this.currentSlide);
+
+        this.wrapper.innerHTML = '';
+        this.wrapper.append(...this.slides);
     }
 
     decorate() {
-        Array.from(this.wrapper.children).forEach((slide, i) => {
-            slide.classList.remove(this.activeClass);
-            if (+slide.dataset.sliderItem === this.currentSlide) {
-                slide.classList.add(this.activeClass);
-            }
-        });
-        // this.wrapper.children[this.currentSlide + this.clonedSlides].classList.add(this.activeClass);
+        Array.from(this.wrapper.children).forEach((slide, i) => slide.classList.remove(this.activeClass));
+
+        this.wrapper.children[0].style.transition = "0s all";
+        this.wrapper.children[0].classList.add(this.activeClass);
     }
 
     extractArrows() {
